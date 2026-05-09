@@ -1,0 +1,434 @@
+{
+  "database": "",
+  "tables": [
+    {
+      "id": 1778341461186,
+      "physicalName": "student_account",
+      "logicalName": "",
+      "description": "",
+      "columns": [
+        {
+          "id": 1778341613501,
+          "wordId": 1778341613501,
+          "physicalName": "student_id",
+          "logicalName": "",
+          "type": "INT(9)",
+          "description": "",
+          "isPrimaryKey": true,
+          "isForeignKey": true,
+          "isNotNull": false,
+          "isUniqueKey": false,
+          "defaultValue": "",
+          "referencedColumn": 1778345166053,
+          "relationId": 1778345486753
+        },
+        {
+          "id": 1778341639653,
+          "wordId": 1778341639653,
+          "physicalName": "password",
+          "logicalName": "",
+          "type": "VARCHAR(20)",
+          "description": "",
+          "isPrimaryKey": false,
+          "isForeignKey": false,
+          "isNotNull": true,
+          "isUniqueKey": false,
+          "defaultValue": "",
+          "referencedColumn": null,
+          "relationId": null
+        },
+        {
+          "id": 1778341794988,
+          "wordId": 1778341794988,
+          "physicalName": "username",
+          "logicalName": "",
+          "type": "VARCHAR(20)",
+          "description": "",
+          "isPrimaryKey": false,
+          "isForeignKey": false,
+          "isNotNull": true,
+          "isUniqueKey": false,
+          "defaultValue": "",
+          "referencedColumn": null,
+          "relationId": null
+        },
+        {
+          "id": 1778345522779,
+          "wordId": 1778345522779,
+          "physicalName": "department_major1",
+          "logicalName": "",
+          "type": "INT(3)",
+          "description": "",
+          "isPrimaryKey": false,
+          "isForeignKey": true,
+          "isNotNull": true,
+          "isUniqueKey": false,
+          "defaultValue": "",
+          "referencedColumn": 1778345166053,
+          "relationId": 1778345486761
+        },
+        {
+          "id": 1778345668172,
+          "wordId": 1778345668172,
+          "physicalName": "department_major2",
+          "logicalName": "",
+          "type": "INT(3)",
+          "description": "",
+          "isPrimaryKey": false,
+          "isForeignKey": false,
+          "isNotNull": false,
+          "isUniqueKey": false,
+          "defaultValue": "",
+          "referencedColumn": null,
+          "relationId": null
+        },
+        {
+          "id": 1778345674278,
+          "wordId": 1778345674278,
+          "physicalName": "department_auxiliary",
+          "logicalName": "",
+          "type": "INT(3)",
+          "description": "",
+          "isPrimaryKey": false,
+          "isForeignKey": false,
+          "isNotNull": false,
+          "isUniqueKey": false,
+          "defaultValue": "",
+          "referencedColumn": null,
+          "relationId": null
+        }
+      ]
+    },
+    {
+      "id": 1778341632338,
+      "physicalName": "teacher_account",
+      "logicalName": "",
+      "description": "",
+      "columns": [
+        {
+          "id": 1778341975830,
+          "wordId": 1778341975830,
+          "physicalName": "teacher_id",
+          "logicalName": "",
+          "type": "VARCHAR(20)",
+          "description": "",
+          "isPrimaryKey": true,
+          "isForeignKey": false,
+          "isNotNull": false,
+          "isUniqueKey": false,
+          "defaultValue": "",
+          "referencedColumn": null,
+          "relationId": null
+        },
+        {
+          "id": 1778341987212,
+          "wordId": 1778341987212,
+          "physicalName": "password",
+          "logicalName": "",
+          "type": "VARCHAR(20)",
+          "description": "",
+          "isPrimaryKey": false,
+          "isForeignKey": false,
+          "isNotNull": true,
+          "isUniqueKey": false,
+          "defaultValue": "",
+          "referencedColumn": null,
+          "relationId": null
+        },
+        {
+          "id": 1778342009335,
+          "wordId": 1778342009335,
+          "physicalName": "username",
+          "logicalName": "",
+          "type": "VARCHAR(20)",
+          "description": "",
+          "isPrimaryKey": false,
+          "isForeignKey": false,
+          "isNotNull": true,
+          "isUniqueKey": false,
+          "defaultValue": "",
+          "referencedColumn": null,
+          "relationId": null
+        },
+        {
+          "id": 1778342013901,
+          "wordId": 1778342013901,
+          "physicalName": "department_id",
+          "logicalName": "",
+          "type": "INT(3)",
+          "description": "",
+          "isPrimaryKey": false,
+          "isForeignKey": true,
+          "isNotNull": true,
+          "isUniqueKey": false,
+          "defaultValue": "",
+          "referencedColumn": 1778345166053,
+          "relationId": 1778345486762
+        }
+      ]
+    },
+    {
+      "id": 1778342039382,
+      "physicalName": "course_information",
+      "logicalName": "",
+      "description": "",
+      "columns": [
+        {
+          "id": 1778342201303,
+          "wordId": 1778342201303,
+          "physicalName": "course_id",
+          "logicalName": "",
+          "type": "INT(9)",
+          "description": "",
+          "isPrimaryKey": true,
+          "isForeignKey": false,
+          "isNotNull": false,
+          "isUniqueKey": false,
+          "defaultValue": "",
+          "referencedColumn": null,
+          "relationId": null
+        },
+        {
+          "id": 1778342204976,
+          "wordId": 1778342204976,
+          "physicalName": "course_name",
+          "logicalName": "",
+          "type": "VARCHAR(20)",
+          "description": "",
+          "isPrimaryKey": false,
+          "isForeignKey": false,
+          "isNotNull": true,
+          "isUniqueKey": false,
+          "defaultValue": "",
+          "referencedColumn": null,
+          "relationId": null
+        },
+        {
+          "id": 1778343266884,
+          "wordId": 1778343266884,
+          "physicalName": "course_type",
+          "logicalName": "",
+          "type": "VARCHAR(10)",
+          "description": "",
+          "isPrimaryKey": false,
+          "isForeignKey": false,
+          "isNotNull": true,
+          "isUniqueKey": false,
+          "defaultValue": "",
+          "referencedColumn": null,
+          "relationId": null
+        },
+        {
+          "id": 1778342537675,
+          "wordId": 1778342537675,
+          "physicalName": "teacher_name",
+          "logicalName": "",
+          "type": "VARCHAR(100)",
+          "description": "",
+          "isPrimaryKey": false,
+          "isForeignKey": false,
+          "isNotNull": true,
+          "isUniqueKey": false,
+          "defaultValue": "",
+          "referencedColumn": null,
+          "relationId": null
+        },
+        {
+          "id": 1778342810637,
+          "wordId": 1778342810637,
+          "physicalName": "department_id",
+          "logicalName": "",
+          "type": "INT(3)",
+          "description": "",
+          "isPrimaryKey": false,
+          "isForeignKey": false,
+          "isNotNull": true,
+          "isUniqueKey": false,
+          "defaultValue": "",
+          "referencedColumn": null,
+          "relationId": null
+        },
+        {
+          "id": 1778343341777,
+          "wordId": 1778343341777,
+          "physicalName": "credits",
+          "logicalName": "",
+          "type": "INT(3)",
+          "description": "",
+          "isPrimaryKey": false,
+          "isForeignKey": false,
+          "isNotNull": true,
+          "isUniqueKey": false,
+          "defaultValue": "",
+          "referencedColumn": null,
+          "relationId": null
+        }
+      ]
+    },
+    {
+      "id": 1778342039383,
+      "physicalName": "course_record",
+      "logicalName": "",
+      "description": "",
+      "columns": [
+        {
+          "id": 1778343110489,
+          "wordId": 1778343110489,
+          "physicalName": "student_id",
+          "logicalName": "",
+          "type": "",
+          "description": "",
+          "isPrimaryKey": true,
+          "isForeignKey": true,
+          "isNotNull": false,
+          "isUniqueKey": false,
+          "defaultValue": "",
+          "referencedColumn": 1778341613501,
+          "relationId": 1778344633028
+        },
+        {
+          "id": 1778343211343,
+          "wordId": 1778343211343,
+          "physicalName": "course_id",
+          "logicalName": "",
+          "type": "",
+          "description": "",
+          "isPrimaryKey": true,
+          "isForeignKey": true,
+          "isNotNull": false,
+          "isUniqueKey": false,
+          "defaultValue": "",
+          "referencedColumn": 1778342201303,
+          "relationId": 1778344633029
+        },
+        {
+          "id": 1778343224367,
+          "wordId": 1778343224367,
+          "physicalName": "semester",
+          "logicalName": "",
+          "type": "VARCHAR(5)",
+          "description": "",
+          "isPrimaryKey": false,
+          "isForeignKey": false,
+          "isNotNull": true,
+          "isUniqueKey": false,
+          "defaultValue": "",
+          "referencedColumn": null,
+          "relationId": null
+        },
+        {
+          "id": 1778343232583,
+          "wordId": 1778343232583,
+          "physicalName": "grade",
+          "logicalName": "",
+          "type": "INT(3)",
+          "description": "",
+          "isPrimaryKey": false,
+          "isForeignKey": false,
+          "isNotNull": true,
+          "isUniqueKey": false,
+          "defaultValue": "",
+          "referencedColumn": null,
+          "relationId": null
+        },
+        {
+          "id": 1778343240032,
+          "wordId": 1778343240032,
+          "physicalName": "passed_state",
+          "logicalName": "",
+          "type": "VARCHAR(1)",
+          "description": "",
+          "isPrimaryKey": false,
+          "isForeignKey": false,
+          "isNotNull": true,
+          "isUniqueKey": false,
+          "defaultValue": "",
+          "referencedColumn": null,
+          "relationId": null
+        }
+      ]
+    },
+    {
+      "id": 1778344633027,
+      "physicalName": "department",
+      "logicalName": "",
+      "description": "",
+      "columns": [
+        {
+          "id": 1778345166053,
+          "wordId": 1778345166053,
+          "physicalName": "department_id",
+          "logicalName": "",
+          "type": "INT(3)",
+          "description": "",
+          "isPrimaryKey": true,
+          "isForeignKey": false,
+          "isNotNull": false,
+          "isUniqueKey": false,
+          "defaultValue": "",
+          "referencedColumn": null,
+          "relationId": null
+        },
+        {
+          "id": 1778345439598,
+          "wordId": 1778345439598,
+          "physicalName": "department_name",
+          "logicalName": "",
+          "type": "VARCHAR(20)",
+          "description": "",
+          "isPrimaryKey": false,
+          "isForeignKey": false,
+          "isNotNull": true,
+          "isUniqueKey": false,
+          "defaultValue": "",
+          "referencedColumn": null,
+          "relationId": null
+        }
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "id": 1778344633028,
+      "sourceTableId": 1778342039383,
+      "targetTableId": 1778341461186,
+      "parentCardinality": "1",
+      "childCardinality": "0..n"
+    },
+    {
+      "id": 1778344633029,
+      "sourceTableId": 1778342039383,
+      "targetTableId": 1778342039382,
+      "parentCardinality": "1",
+      "childCardinality": "0..n"
+    },
+    {
+      "id": 1778345486761,
+      "sourceTableId": 1778341461186,
+      "targetTableId": 1778344633027,
+      "parentCardinality": "1",
+      "childCardinality": "0..n"
+    },
+    {
+      "id": 1778345486762,
+      "sourceTableId": 1778341632338,
+      "targetTableId": 1778344633027,
+      "parentCardinality": "1",
+      "childCardinality": "0..n"
+    },
+    {
+      "id": 1778345486763,
+      "sourceTableId": 1778342039382,
+      "targetTableId": 1778344633027,
+      "parentCardinality": "1",
+      "childCardinality": "0..n"
+    }
+  ],
+  "categories": [
+    {
+      "id": 1778341461185,
+      "name": "Student",
+      "tableIds": []
+    }
+  ]
+}
