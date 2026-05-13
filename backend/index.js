@@ -70,5 +70,5 @@ app.get('/api/audit/:studentId', async (req, res) => {
 
 const PORT = 3001;
 app.listen(PORT, () => {
-    console.log(`🚀 API 伺服器已啟動：http://localhost:${PORT}`);
+    console.log(`API 伺服器已啟動：http://localhost:${PORT}`);
 });
