@@ -2,9 +2,11 @@ SHOW TABLES;
 DESCRIBE course_information;
 DESCRIBE course_record;
 DESCRIBE department;
+DESCRIBE graduation_requirements;
 DESCRIBE nccu_units;
 DESCRIBE student_account;
 DESCRIBE teacher_account;
+
 
 SELECT * FROM student_account;
 SELECT * FROM course_information;
