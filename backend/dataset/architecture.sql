@@ -14,7 +14,6 @@ CREATE TABLE `student_account` (
   `department_major2` INT(3),
   `department_auxiliary` INT(3),
   PRIMARY KEY (`student_id`),
-  CONSTRAINT `fk_student_account_student_id` FOREIGN KEY (`student_id`) REFERENCES `department`(`department_id`),
   CONSTRAINT `fk_student_account_department_major1` FOREIGN KEY (`department_major1`) REFERENCES `department`(`department_id`),
   CONSTRAINT `fk_student_account_department_major2` FOREIGN KEY (`department_major2`) REFERENCES `department`(`department_id`),
   CONSTRAINT `fk_student_account_department_auxiliary` FOREIGN KEY (`department_auxiliary`) REFERENCES `department`(`department_id`)
