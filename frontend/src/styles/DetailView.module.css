@@ -1,0 +1,131 @@
+﻿.detailContainer {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 1.5rem;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  min-height: 600px;
+  animation: slideInRight 0.3s ease both;
+}
+.detailHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  z-index: 10;
+}
+.backButton {
+  padding: 0.75rem;
+  border-radius: 999px;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+.backButton:hover {
+  background: #f3f4f6;
+  color: var(--text-h);
+}
+.detailTitle {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-h);
+}
+.detailSubtitle {
+  margin: 0.25rem 0 0;
+  color: var(--text);
+  font-size: 0.95rem;
+}
+.detailBody {
+  padding: 1.5rem;
+  flex: 1;
+  background: rgba(248, 250, 252, 0.9);
+}
+.tableWrapper {
+  overflow-x: auto;
+}
+.detailTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+.tableHeadRow {
+  background: #f8fafc;
+  color: #6b7280;
+  font-size: 0.9rem;
+  border-bottom: 1px solid var(--border);
+}
+.tableCell {
+  padding: 1rem 1.25rem;
+  vertical-align: middle;
+}
+.tableCellCenter {
+  text-align: center;
+}
+.tableBodyRow {
+  transition: background 0.2s ease;
+}
+.missingRow {
+  background-color: rgba(254, 226, 226, 0.5);
+}
+.tableBodyRow:hover {
+  background: #f8fafc;
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.badgePassed {
+  color: #047857;
+  background: #ecfdf5;
+  border: 1px solid #d1fae5;
+}
+.badgeMissing {
+  color: #b91c1c;
+  background: #fef2f2;
+  border: 1px solid #fee2e2;
+}
+.emptyState {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  color: #6b7280;
+  padding: 4rem 1rem;
+}
+.emptyIcon {
+  width: 5rem;
+  height: 5rem;
+  border-radius: 999px;
+  background: #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
