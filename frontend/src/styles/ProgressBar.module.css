@@ -1,0 +1,15 @@
+﻿.wrapper {
+  width: 100%;
+  background: #e5e7eb;
+  border-radius: 999px;
+  height: 0.75rem;
+  overflow: hidden;
+  margin-bottom: 0.75rem;
+}
+.track {
+  width: var(--progress-width, 0%);
+  height: 100%;
+  border-radius: inherit;
+  background: var(--progress-color, #2563eb);
+  transition: width 0.8s ease;
+}

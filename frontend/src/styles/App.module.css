@@ -1,0 +1,23 @@
+﻿.app {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text-h);
+  padding: 1.5rem 1rem;
+}
+.appContainer {
+  max-width: 1126px;
+  margin: 0 auto;
+}
+.pageHeader {
+  margin-bottom: 1.5rem;
+}
+.pageSubtitle {
+  color: var(--text);
+  font-size: 0.95rem;
+}
+.pageTitle {
+  color: var(--text-h);
+  font-size: clamp(2rem, 3vw, 3rem);
+  font-weight: 700;
+  margin: 0.25rem 0 0;
+}
