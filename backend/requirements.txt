@@ -1,0 +1,8 @@
+alembic
+SQLAlchemy
+python-dotenv
+pymysql
+asyncmy
+fastapi
+cryptography
+requests
