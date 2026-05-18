@@ -1,0 +1,64 @@
+{
+  "api_endpoint": "/api/v1/auth/login",
+  "method": "POST",
+  "description": "使用者登入驗證並獲取存取權杖 (Access Token)",
+  "request": {
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "username": "string (required) - 使用者帳號或 Email",
+      "password": "string (required) - 密碼"
+    }
+  },
+  "responses": {
+    "200_success": {
+      "description": "登入成功",
+      "body": {
+        "status": "success",
+        "data": {
+          "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+          "refresh_token": "def502005a7b212f4533fd0a1...",
+          "token_type": "Bearer",
+          "expires_in": 3600,
+          "user": {
+            "id": "550e8400-e29b-41d4-a716-446655440000",
+            "username": "michael_c",
+            "roles": ["user", "admin"]
+          }
+        }
+      }
+    },
+    "400_bad_request": {
+      "description": "請求格式錯誤或缺少必要欄位",
+      "body": {
+        "status": "error",
+        "error": {
+          "code": "VALIDATION_ERROR",
+          "message": "缺少必要欄位：password"
+        }
+      }
+    },
+    "401_unauthorized": {
+      "description": "憑證無效或密碼錯誤",
+      "body": {
+        "status": "error",
+        "error": {
+          "code": "AUTH_INVALID_CREDENTIALS",
+          "message": "使用者名稱或密碼錯誤",
+          "remaining_attempts": 4
+        }
+      }
+    },
+    "403_forbidden": {
+      "description": "帳號被鎖定或拒絕存取",
+      "body": {
+        "status": "error",
+        "error": {
+          "code": "AUTH_ACCOUNT_LOCKED",
+          "message": "登入失敗次數過多，帳號已鎖定，請於 15 分鐘後再試。"
+        }
+      }
+    }
+  }
+}

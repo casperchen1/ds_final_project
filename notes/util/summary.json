@@ -1,0 +1,83 @@
+{
+  "api_endpoint": "/api/v1/graduation/summary",
+  "method": "GET",
+  "description": "取得主頁儀表板 (Dashboard) 統計數據，僅包含學生資訊與各區塊學分進度，不包含課程明細。",
+  "request": {
+    "headers": {
+      "Authorization": "string (required) - Bearer Token，例如: Bearer eyJhbG..."
+    }
+  },
+  "responses": {
+    "200_success": {
+      "description": "成功取得學分總覽資料",
+      "body": {
+        "status": "success",
+        "data": {
+          "student_info": {
+            "student_id": "113000000",
+            "grade": "2",
+            "name": "Yoga",
+            "major": "資訊科學系",
+            "double_major": null,
+            "minor": null,
+            "is_pass": true
+          },
+          "total_credits": {
+            "earned": 129,
+            "required": 128
+          },
+          "categories": [
+            {
+              "id": "major_core",
+              "name": "本群主修",
+              "earned": 65,
+              "required": 65,
+              "hint": "尚缺xx 課程"
+            },
+            {
+              "id": "out_department",
+              "name": "外系選修",
+              "earned": 26,
+              "required": 28,
+              "hint": "尚缺xx 課程"
+            },
+            {
+              "id": "general_edu",
+              "name": "通識課程",
+              "earned": 26,
+              "required": 28,
+              "hint": "尚缺xx 課程"
+            },
+            {
+              "id": "common_compulsory",
+              "name": "共同必修",
+              "earned": 12,
+              "required": 7,
+              "hint": "已超出必修學分，建議選修其他類別課程"
+            }
+          ]
+        }
+      }
+    },
+    "401_unauthorized": {
+      "description": "未提供 Token 或 Token 已失效",
+      "body": {
+        "status": "error",
+        "error": {
+          "code": "UNAUTHORIZED",
+          "message": "請先登入系統"
+        }
+      }
+    },
+    "500_internal_server_error": {
+      "description": "伺服器內部錯誤（例如資料庫連線失敗）",
+      "body": {
+        "status": "error",
+        "error": {
+          "code": "INTERNAL_SERVER_ERROR",
+          "message": "系統發生非預期錯誤，請稍後再試"
+        }
+      }
+    }
+  }
+}
