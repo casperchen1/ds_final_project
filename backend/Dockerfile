@@ -29,7 +29,7 @@ RUN pip install --no-cache-dir --upgrade pip && \
 COPY . .
 
 # 8. 宣告容器運行時要監聽的連接埠（Port）
-EXPOSE 8000
+EXPOSE 8080
 
 # 9. 容器啟動時執行的預設指令
 # --host 0.0.0.0 : 允許容器外的本機（Windows/Mac）連線進來
