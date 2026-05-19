@@ -34,4 +34,4 @@ EXPOSE 8000
 # 9. 容器啟動時執行的預設指令
 # --host 0.0.0.0 : 允許容器外的本機（Windows/Mac）連線進來
 # --reload       : 開啟熱重載，程式碼一改立刻自動重啟
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080", "--reload"]
