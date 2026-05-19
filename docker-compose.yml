@@ -1,0 +1,53 @@
+services:
+  # 1. 資料庫服務
+  db:
+    image: mysql:8.0
+    container_name: project_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: ds_final_project
+    ports:
+      - "3306:3306"
+    volumes:
+      # 將資料庫的資料存到本地，避免容器重啟後資料消失
+      - mysql_data:/var/lib/mysql
+
+  # 2. 後端服務
+  backend:
+    build: 
+      context: ./backend
+    container_name: project_backend
+    restart: always
+    ports:
+      - "8000:8000"
+    volumes:
+      # 掛載本地 backend 資料夾到容器內的 /app/backend
+      # 讓 python 可以透過 backend.* 方式匯入
+      - ./backend:/app
+    environment:
+      # 告訴後端資料庫在哪裡，注意這裡的 host 是 'db' (對應上面的服務名稱)
+      - DATABASE_URL=mysql+aiomysql://root:password@db:3306/ds_final_project
+    depends_on:
+      - db  # 確保資料庫先啟動後，再啟動後端
+
+  # 3. 前端服務
+  frontend:
+    build: 
+      context: ./frontend
+    container_name: project_frontend
+    restart: always
+    ports:
+      - "5173:5173" # 若你用 Vite，請改成 "5173:5173"
+    volumes:
+      - ./frontend:/app
+      # 重要：建立一個匿名 volume 給 node_modules，避免本地的 node_modules 蓋過容器內安裝的環境
+      - /app/node_modules
+    environment:
+      - WATCHPACK_POLLING=true # 確保 React 在 Docker 內能正常監聽檔案變化
+    depends_on:
+      - backend
+
+# 宣告全域的 Volume
+volumes:
+  mysql_data:

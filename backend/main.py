@@ -2,7 +2,6 @@ from fastapi import FastAPI, APIRouter, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from contextlib import asynccontextmanager
-from backend.routers import graduation
 import utils.setup as setup
 from seeds import seed_db
 from routers import course, graduation, authorization  # 匯入子路由

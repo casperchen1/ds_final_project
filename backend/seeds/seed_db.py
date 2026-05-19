@@ -5,11 +5,12 @@ import os
 from sqlalchemy.dialects.mysql import insert as mysql_insert
 from database import AsyncSessionLocal  # 引入你的 Session 工廠
 from models import Base
+from typing import Any
 
 SEEDS_DIR = os.path.dirname(os.path.abspath(__file__))
 registered_tables = Base.metadata.tables
         
-async def seed_data(file_name):
+async def seed_data(file_name: str) -> None:
     file_path = os.path.join(SEEDS_DIR, file_name)
     if os.path.isfile(file_path):
         table_name, ext = os.path.splitext(os.path.basename(file_path))
@@ -53,7 +54,7 @@ async def seed_data(file_name):
                                 
                             # 2. 💡【關鍵修正】將這一行資料中所有的空字串 '' 轉成 None (資料庫的 NULL)
                             # 順便把字串前後可能不小心按到的空白 (strip) 修正掉
-                            clean_row = {}
+                            clean_row: dict[str, Any] = {}
                             for k, v in row.items():
                                 if v is not None:
                                     v = v.strip() # 去除前後空白
