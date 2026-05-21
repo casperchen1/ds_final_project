@@ -18,7 +18,7 @@ DATABASE_URL = f"mysql+asyncmy://{os.getenv("USER", "root")}:{os.getenv("PASSWOR
 engine = create_async_engine(
     DATABASE_URL,
     echo=False,
-    pool_pre_ping=True,  # 自動檢查連線是否可用，避免 "MySQL server has gone away" 錯誤
+    pool_pre_ping=False,  # 自動檢查連線是否可用，避免 "MySQL server has gone away" 錯誤
     pool_size=10,        # 連線池基本大小
     max_overflow=20      # 超出 pool_size 後最多可額外建立的連線數
 )

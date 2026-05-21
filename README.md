@@ -40,3 +40,6 @@ docker-compose down -v
 
 ## Preview
 https://gemini.google.com/share/0bf2827f4aa6
+
+## 課程紀錄
+[資料收集說明](./backend/tools/obtain_course_record.ipynb)

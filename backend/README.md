@@ -4,20 +4,6 @@
     - sqlalchemy
     - Alembic
 
-SQL使用者預設為root  
-所有命令都是假設執行位置為backend
-
-## docker相關
-建立並啟動容器  
-```
-docker-compose up
-```
-
-清空
-```
-docker compose down -v
-```
-
 # Alembic
 https://alembic.sqlalchemy.org/en/latest/tutorial.html
 
@@ -34,17 +20,6 @@ alembic upgrade head
 用途：執行所有尚未套用的遷移腳本，將資料庫結構升級到最新狀態（head 代表最新版本）。
 
 注意：此指令才會真正去修改你的 MySQL 資料庫結構。
-
-## 運行
-用py -m [module] 執行檔案
-- 初始化並同步資料庫變更
-```
-py -m setup
-```
-- 導入資料
-```
-py -m seeds.seed_db
-```
   
 ## 資料庫相關
 ### 數據格式
@@ -68,18 +43,6 @@ py -m seeds.seed_db
 - RPE 體育必修
 - EPE 體育選修
 - CD 國防 civil defence
-  
-### 必修科目表結構
-graduation_requirements: 必修分數限制、總學分限制  
-requirement_rule: 建立必修規則，約束需要滿足的課程數
-    規則可以是其他規則的子規則，由parent_rule_id定義
-    當子規則被滿足時，母規則滿足課程數+1
-
-requirement_course_mapping: 紀錄課程在哪個規則之下
-  
-檢查:
-    每有一種不同的alternative_course_id，母規則被滿足的規則數+1
-    NULL視為獨一無二的alternative_course_id
 
 ## API相關
 全自動互動式文件: http://127.0.0.1:8080/docs

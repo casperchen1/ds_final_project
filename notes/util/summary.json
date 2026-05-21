@@ -15,11 +15,10 @@
         "data": {
           "student_info": {
             "student_id": "113000000",
-            "grade": "2",
             "name": "Yoga",
-            "major": "資訊科學系",
-            "double_major": null,
-            "minor": null,
+            "major1": "資訊科學系",
+            "major2": null,
+            "auxiliary": null,
             "is_pass": true
           },
           "total_credits": {

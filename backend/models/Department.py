@@ -31,12 +31,13 @@ class RequirementRule(Base):
         primary_key=True
     )
     rule_name: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
-    required_course_count: Mapped[int] = mapped_column(Integer, nullable=False)
+    required_course_count: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
     parent_rule_id: Mapped[Optional[int]] = mapped_column(
         Integer,
         ForeignKey("requirement_rule.rule_id"),
         nullable=True
     )
+    hint: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
 
 class RequirementCourseMapping(Base):
     __tablename__ = "requirement_course_mapping"

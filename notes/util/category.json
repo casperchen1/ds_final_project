@@ -3,6 +3,9 @@
   "method": "GET",
   "description": "取得特定學分區塊的詳細進度與課程清單（用於點擊 Block 後跳轉的新頁面）",
   "request": {
+    "headers": {
+      "Authorization": "string (required) - Bearer Token，例如: Bearer eyJhbG..."
+    },
     "path_parameters": {
       "category_id": "string (required) - 類別 ID，例如 'major_core', 'general_edu'"
     }
@@ -12,14 +15,7 @@
       "body": {
         "status": "success",
         "data": {
-          "category_info": {
-            "id": "major_core",
-            "name": "本群主修",
-            "description": "包含系上規定之核心必修與選修課程",
-            "credits_earned": 65,
-            "credits_required": 65,
-            "is_completed": true
-          },
+          "id": "major_department",
           "courses": [
             {
               "course_id": "CS101",
