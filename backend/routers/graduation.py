@@ -51,17 +51,17 @@ async def get_summary(user: dict = Depends(get_user), db: AsyncSession = Depends
         result = await db.execute(stmt)
         student_info["auxiliary"] = result.scalar()
     
-    stmt = select(GraduationRequirements.required_course_credits, GraduationRequirements.total_credits_threshold).where(GraduationRequirements.department_id == student.department_major1)
+    total_credits = {"earned": 0, "required": 128}
+
+    stmt = select(GraduationRequirements.required_course_credits).where(GraduationRequirements.department_id == student.department_major1)
     result = await db.execute(stmt)
-    requirement = result.mappings().one()
-    total_credits = {"required": requirement["total_credits_threshold"] or 0}
 
     categories = [
         {
             "id": "major_core",
             "name": "本群主修",
             "earned": 0,
-            "required": requirement["required_course_credits"] or 0,
+            "required": result.scalar() or 0,
             "hint": ""
         },
         {
@@ -110,13 +110,14 @@ async def get_summary(user: dict = Depends(get_user), db: AsyncSession = Depends
 
     if categories[0]["earned"] < categories[0]["required"] or categories[0]["hint"] != "":
         student_info["is_pass"] = False
+
+    total_credits["earned"] += categories[0]["earned"]
     # print("必修檢查正常")
     # 選修
     subquery = (select(CourseRecord.course_id)
         .join(CourseInformation)
         .where(CourseRecord.student_id == student.student_id, 
-            CourseRecord.status == "passed", 
-            CourseInformation.department_id != student.department_major1, 
+            CourseRecord.status == "passed",
             CourseInformation.course_type.in_(["R", "P", "E"]),
             CourseRecord.course_id.not_in(
                         select(RequirementCourseMapping.course_id)
@@ -129,6 +130,7 @@ async def get_summary(user: dict = Depends(get_user), db: AsyncSession = Depends
     stmt = select(func.sum(CourseInformation.credits)).where(CourseInformation.course_id.in_(subquery))
     result = await db.execute(stmt)
     categories[1]["earned"] = result.scalar() or 0
+    total_credits["earned"] += categories[1]["earned"]
     # print("選修檢查正常")
     # 中文
     subquery = (select(CourseRecord.course_id)
@@ -252,6 +254,7 @@ async def get_summary(user: dict = Depends(get_user), db: AsyncSession = Depends
     if categories[2]["earned"] < 28:
         categories[2]["hint"] += f"尚缺{28 - categories[2]["earned"]}學分、"
     categories[2]["hint"].strip("、")
+    total_credits["earned"] += categories[2]["earned"]
     # print("一般通識檢查正常")
     # 共同必修
     subquery = (select(CourseRecord.course_id)
@@ -268,10 +271,8 @@ async def get_summary(user: dict = Depends(get_user), db: AsyncSession = Depends
     if categories[3]["earned"] < 4:
         student_info["is_pass"] = False
         categories[3]["hint"] = f"尚缺體育{4 - categories[3]["earned"]}學分"
-    
-    total_credits["earned"] = 0
-    for category in categories:
-        total_credits["earned"] += category["earned"]
+
+
     if total_credits["earned"] < total_credits["required"]:
         student_info["is_pass"] = False
     # print("共同必修檢查正常")
@@ -384,7 +385,6 @@ async def get_categories(category_id: str, user: dict = Depends(get_user), db: A
             stmt = (select(CourseInformation, CourseRecord)
                 .where(CourseInformation.course_id == CourseRecord.course_id,
                     CourseRecord.student_id == student.student_id, 
-                    CourseInformation.department_id != student.department_major1, 
                     CourseInformation.course_type.in_(["R", "P", "E"]),
                     CourseRecord.course_id.not_in(
                                 select(RequirementCourseMapping.course_id)

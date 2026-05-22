@@ -47,7 +47,7 @@ async def search_courses(payload: CourseSearchRequest, db: AsyncSession = Depend
         stmt = stmt.join(Department).where((CourseInformation.department_id == payload.department) | (Department.department_name.ilike(f"%{payload.department}%")))
 
     # 3. 處理分頁限制 (Pagination)
-    payload.size = max(payload.size, 500)
+    payload.size = min(payload.size, 500)
     offset_value = (payload.page - 1) * payload.size
     stmt = stmt.offset(offset_value).limit(payload.size)
     

@@ -8,3 +8,5 @@ rule_id,department_id,rule_name,required_course_count,parent_rule_id,hint
 7,703,PartiallyRequired_C,1,5,C群{missing_course_count}門
 8,703,PartiallyRequired_D,1,5,D群{missing_course_count}門
 9,703,PartiallyRequired_E,1,5,E群{missing_course_count}門
+10,701,Required,,,必修:缺{missing_courses}
+11,702,Required,,,必修:缺{missing_courses}
