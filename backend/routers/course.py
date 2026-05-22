@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, text
 from database import get_db
 from pydantic import BaseModel, Field
-from typing import List, Optional
+from typing import List, Optional, Sequence
 from models.Course import CourseInformation
 from models.Department import Department
 from utils.jsend_schemas import JSendSuccessResponse
@@ -21,7 +21,10 @@ class CourseSearchRequest(BaseModel):
     page: int = Field(1)
     size: int = Field(10)
 
-@router.post("/search")
+@router.post(
+    "/search",
+    response_model=JSendSuccessResponse[List]
+)
 async def search_courses(payload: CourseSearchRequest, db: AsyncSession = Depends(get_db)):
     """取得課程資訊"""
     # 1. 初始化基礎查詢
@@ -41,7 +44,7 @@ async def search_courses(payload: CourseSearchRequest, db: AsyncSession = Depend
         stmt = stmt.where(CourseInformation.course_type == payload.course_type)
     
     if payload.department:
-        stmt = stmt.join(Department).where(CourseInformation.department_id == payload.department or Department.department_name.ilike(f"%{payload.department}%"))
+        stmt = stmt.join(Department).where((CourseInformation.department_id == payload.department) | (Department.department_name.ilike(f"%{payload.department}%")))
 
     # 3. 處理分頁限制 (Pagination)
     payload.size = max(payload.size, 500)
@@ -51,5 +54,12 @@ async def search_courses(payload: CourseSearchRequest, db: AsyncSession = Depend
     # 4. 執行並回傳
     result = await db.execute(stmt)
     courses = result.scalars().all() # 撈出 ORM 物件清單
-    
-    return JSendSuccessResponse(data=courses)
+    return {"data": [
+        {"course_id": course.course_id,
+         "course_name": course.course_name,
+         "course_type": course.course_type,
+         "teacher_name": course.teacher_name,
+         "department_id": course.department_id,
+         "credits": course.credits
+        } for course in courses]
+    }

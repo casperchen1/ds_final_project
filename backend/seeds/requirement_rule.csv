@@ -1,4 +1,10 @@
-rule_id,department_id,rule_name,required_course_count,parent_rule_id
-1,703,InformationRequired,18,
-2,703,InformationPartiallyRequired_A,2,1
-3,703,InformationPartiallyRequired_BCDE,3,1
+rule_id,department_id,rule_name,required_course_count,parent_rule_id,hint
+1,703,GraduationRequirements,,,必修:缺{Required}\n群修:缺{PartiallyRequired}
+2,703,Required,16,1,{missing_courses}
+3,703,PartiallyRequired,,1,{PartiallyRequired_A}、{PartiallyRequired_BCDE}
+4,703,PartiallyRequired_A,2,3,A群{missing_course_count}門
+5,703,PartiallyRequired_BCDE,3,3,{PartiallyRequired_B}、{PartiallyRequired_C}、{PartiallyRequired_D}、{PartiallyRequired_E}
+6,703,PartiallyRequired_B,1,5,B群{missing_course_count}門
+7,703,PartiallyRequired_C,1,5,C群{missing_course_count}門
+8,703,PartiallyRequired_D,1,5,D群{missing_course_count}門
+9,703,PartiallyRequired_E,1,5,E群{missing_course_count}門

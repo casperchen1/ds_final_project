@@ -7,7 +7,7 @@
       "Content-Type": "application/json"
     },
     "body": {
-      "username": "string (required) - 使用者帳號或 Email",
+      "id": "string (required) - 使用者id",
       "password": "string (required) - 密碼"
     }
   },
@@ -17,14 +17,11 @@
       "body": {
         "status": "success",
         "data": {
-          "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-          "refresh_token": "def502005a7b212f4533fd0a1...",
-          "token_type": "Bearer",
-          "expires_in": 3600,
+          "token": "def502005a7b212f4533fd0a1...",
           "user": {
-            "id": "550e8400-e29b-41d4-a716-446655440000",
-            "username": "michael_c",
-            "roles": ["user", "admin"]
+            "id": "113703000",
+            "name": "michael_c",
+            "role": "student"
           }
         }
       }

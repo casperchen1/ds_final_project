@@ -1,7 +1,7 @@
 from typing import List, Optional
 from sqlalchemy import String, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy.dialects.mysql import INTEGER
+from sqlalchemy.dialects.mysql import INTEGER, FLOAT
 from pydantic import ConfigDict
 from database import Base
 
@@ -35,6 +35,6 @@ class CourseRecord(Base):
         primary_key=True
     )
     semester: Mapped[str] = mapped_column(String(5), primary_key=True)
-    grade: Mapped[int] = mapped_column(INTEGER(display_width=3), nullable=False)
-    passed_state: Mapped[str] = mapped_column(String(1), nullable=False)
+    grade: Mapped[Optional[float]] = mapped_column(FLOAT(precision=2), nullable=True)
+    status: Mapped[str] = mapped_column(String(10), nullable=False)
 
