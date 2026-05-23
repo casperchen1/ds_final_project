@@ -19,7 +19,6 @@ class GraduationRequirements(Base):
         primary_key=True
     )
     required_course_credits: Mapped[int] = mapped_column(Integer, nullable=False)
-    total_credits_threshold: Mapped[int] = mapped_column(Integer, nullable=False)
 
 class RequirementRule(Base):
     __tablename__ = "requirement_rule"
