@@ -9,6 +9,8 @@ from datetime import datetime, timedelta, timezone
 from models.Accouunt import StudentAccount, TeacherAccount
 from utils.jsend_schemas import JSendSuccessResponse
 from utils.exceptions import APIFailException
+from .authorization import get_user
+
 router = APIRouter(
     tags=["Teacher"]
 )
@@ -25,7 +27,13 @@ class CreditProgressQuery(BaseModel):
     "/students/credit-progress",
     response_model=JSendSuccessResponse[list]
 )
-async def get_credit_progress(payload: CreditProgressQuery, db: AsyncSession = Depends(get_db)):
+async def get_credit_progress(payload: CreditProgressQuery, user: dict = Depends(get_user), db: AsyncSession = Depends(get_db)):
+    if not user["role"] == "teacher":
+        raise APIFailException(
+            code="BAD_REQUEST",
+            message="使用者身份不是教師"
+        )
+        
     return {
         "data": [
             
