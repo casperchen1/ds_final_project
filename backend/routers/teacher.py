@@ -16,7 +16,7 @@ router = APIRouter(
 class CreditProgressQuery(BaseModel):
     enrollment_year: Optional[str] = Field(None, description="入學年度")
     department_id: Optional[str] = Field(None, description="科系代碼")
-    catergory_id: Optional[str] = Field(None, description="學分類型篩選")
+    category_id: Optional[str] = Field(None, description="學分類型篩選")
     is_pass: Optional[bool] = Field(None, description="篩選是否達標")
     page: Optional[int] = Field(1)
     size: Optional[int] = Field(20)

@@ -94,7 +94,7 @@ async def get_summary(user: dict = Depends(get_user), db: AsyncSession = Depends
     ]
     
     # 必修
-    categories[0]["earned"], categories[0]["required"], categories[0]["hint"] = check_department_rule(student.student_id, student.department_major1, db)
+    categories[0]["earned"], categories[0]["required"], categories[0]["hint"] = await check_department_rule(student.student_id, student.department_major1, db)
 
     if categories[0]["earned"] < categories[0]["required"] or categories[0]["hint"] != "":
         student_info["is_pass"] = False
@@ -272,7 +272,7 @@ async def get_summary(user: dict = Depends(get_user), db: AsyncSession = Depends
               "hint": ""
             }
         }
-        major2["earned"], major2["required"], major2["hint"] = check_department_rule(student.student_id, student.department_major2, db)
+        major2["earned"], major2["required"], major2["hint"] = await check_department_rule(student.student_id, student.department_major2, db)
 
         if major2["earned"] < major2["required"] or major2["hint"] != "":
             student_info["is_pass"] = False
@@ -286,13 +286,13 @@ async def get_summary(user: dict = Depends(get_user), db: AsyncSession = Depends
         auxiliary1 = {
             {
               "id": "auxiliary1",
-              "name": "輔系",
+              "name": "第一輔系",
               "earned": 0,
               "required": 0,
               "hint": ""
             }
         }
-        auxiliary1["earned"], auxiliary1["required"], auxiliary1["hint"] = check_department_rule(student.student_id, student.department_auxiliary1, db)
+        auxiliary1["earned"], auxiliary1["required"], auxiliary1["hint"] = await check_department_rule(student.student_id, student.department_auxiliary1, db)
 
         if auxiliary1["earned"] < auxiliary1["required"] or auxiliary1["hint"] != "":
             student_info["is_pass"] = False
@@ -305,13 +305,13 @@ async def get_summary(user: dict = Depends(get_user), db: AsyncSession = Depends
         auxiliary2 = {
             {
               "id": "auxiliary2",
-              "name": "雙主修",
+              "name": "第二輔系",
               "earned": 0,
               "required": 0,
               "hint": ""
             }
         }
-        auxiliary2["earned"], auxiliary2["required"], auxiliary2["hint"] = check_department_rule(student.student_id, student.department_auxiliary2, db)
+        auxiliary2["earned"], auxiliary2["required"], auxiliary2["hint"] = await check_department_rule(student.student_id, student.department_auxiliary2, db)
 
         if auxiliary2["earned"] < auxiliary2["required"] or auxiliary2["hint"] != "":
             student_info["is_pass"] = False
@@ -542,7 +542,7 @@ async def get_categories(category_id: str, user: dict = Depends(get_user), db: A
             else:
                 raise APIFailException(
                     code = "CATEGORY_NOT_FOUND",
-                    message= "使用者沒有第二個輔系",
+                    message= "使用者沒有第二輔系",
                     status_code=404
                 )
         case _:
