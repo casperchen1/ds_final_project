@@ -1,8 +1,9 @@
 rule_id,department_id,rule_name,required_course_count,required_credits,parent_rule_id,hint
 10101,101,GraduationRequirements,,,,必修:缺{Required}\n群修:缺{PartiallyRequired}
 10102,101,Required,,,10101,{missing_courses}
-10103,101,PartiallyRequired_A,0,6,10101,群A{missing_credits}學分
-10104,101,PartiallyRequired_B,0,9,10101,群B{missing_credits}學分
+10103,101,PartiallyRequired,,,10101,{PartiallyRequired_A}、{PartiallyRequired_B}
+10104,101,PartiallyRequired_A,0,6,10103,群A{missing_credits}學分
+10105,101,PartiallyRequired_B,0,9,10103,群B{missing_credits}學分
 10201,102,GraduationRequirements,,,,必修:缺{Required}\n群修:缺{PartiallyRequired}
 10202,102,Required,,,10201,{missing_courses}
 10203,102,PartiallyRequired_A,7,,10201,群A{missing_credits}學分

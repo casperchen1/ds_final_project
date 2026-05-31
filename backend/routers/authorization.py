@@ -6,15 +6,17 @@ from pydantic import BaseModel
 import uuid
 from datetime import datetime, timedelta, timezone
 from models.Accouunt import StudentAccount, TeacherAccount
+from models.Department import Department
 from utils.jsend_schemas import JSendSuccessResponse
 from utils.exceptions import APIFailException
+
 router = APIRouter(
     tags=["Authorization"]
 )
 
 TOKEN_SESSION_STORE = {}
 
-class RegisterPayload(BaseModel):
+class StudentRegisterPayload(BaseModel):
     id: str
     name: str
     password: str
@@ -33,7 +35,7 @@ class ResetPasswordPayload(BaseModel):
     status_code=201,
     response_model=JSendSuccessResponse[dict]
 )
-async def register_account(payload: RegisterPayload, db: AsyncSession = Depends(get_db)):
+async def student_register_account(payload: StudentRegisterPayload, db: AsyncSession = Depends(get_db)):
     """建立新使用者帳號 (學生或教師)"""
     
     if payload.password != payload.password_confirm:
@@ -48,42 +50,30 @@ async def register_account(payload: RegisterPayload, db: AsyncSession = Depends(
         result_student = await db.execute(stmt_student)
         existing_student = result_student.scalar()
 
-        stmt_teacher = select(TeacherAccount).where(TeacherAccount.teacher_id == payload.id)
-        result_teacher = await db.execute(stmt_teacher)
-        existing_teacher = result_teacher.scalar()
-
-        if existing_student or existing_teacher:
+        if existing_student:
             raise APIFailException(
                 code="AUTH_USER_ALREADY_EXISTS",
                 message="此學號或教職員編號已註冊過系統",
                 status_code=409
             )
 
-        # 3. 判斷身分並建立帳號
-        # 備註：由於 payload 中沒有明確的 role 欄位，這裡依照台灣大專院校常見規則，
-        # 假設 9 碼全數字的 id 為學生 (如 113703000)，其餘視為教師。你可以依照實際業務邏輯調整。
-        is_student = payload.id.isdigit() and len(payload.id) == 9
-        role = "student" if is_student else "teacher"
+        is_student = len(payload.id) == 9
 
         if is_student:
-            department_id = payload.id[3:6] if len(payload.id) >= 6 else "703"
+            result = await db.execute(select(Department.department_id))
+            departments = set(result.scalars())
+            department_id = payload.id[3:6] if payload.id[3:6] in departments >= 6 else "000"
             new_user = StudentAccount(
                 student_id=payload.id,
                 password=payload.password, # 實務上建議在此處將密碼進行 Hash 處理 (例如使用 bcrypt)
                 user_name=payload.name,
                 department_major1=department_id
             )
-            department_id = payload.id[3:6] if len(payload.id) >= 6 else "unknown"
         else:
-            department_id = "703"
-            new_user = TeacherAccount(
-                teacher_id=payload.id,
-                password=payload.password, 
-                user_name=payload.name,
-                department_id=department_id
+            raise APIFailException(
+                code="Bad request",
+                message="id 長度不合法"
             )
-            department_id = "teacher_dept"
-
         db.add(new_user)
         await db.commit()
         
@@ -92,7 +82,7 @@ async def register_account(payload: RegisterPayload, db: AsyncSession = Depends(
                 "user": {
                     "id": payload.id,
                     "name": payload.name,
-                    "role": role,
+                    "role": "student",
                     "department_id": department_id
                 }
             }
@@ -172,12 +162,14 @@ async def account_verify(payload: LoginPayload, db: AsyncSession = Depends(get_d
                 "expires_at": expire_time
             }
             return {
-                "token": user_token,
-                "user": {
-                    "id": user.teacher_id,
-                    "name": user.user_name,
-                    "role": "teacher",
-                    "expires_at": expire_time
+                "data": {
+                    "token": user_token,
+                    "user": {
+                        "id": user.teacher_id,
+                        "name": user.user_name,
+                        "role": "teacher",
+                        "expires_at": expire_time
+                    }
                 }
             }
     except Exception as e:

@@ -6,14 +6,18 @@ from database import get_db
 from models.Accouunt import StudentAccount
 from models.Course import CourseInformation, CourseRecord
 from models.Department import Department, GraduationRequirements, RequirementRule, RequirementCourseMapping
+from utils.jsend_schemas import JSendSuccessResponse, JSendErrorResponse
 from utils.exceptions import APIFailException
+from utils.department_info import get_department_name
 from .authorization import get_user
 
 router = APIRouter(
     tags=["StudentInformation"]
 )
-
-@router.post("/summary")
+@router.post(
+    "/summary",
+    response_model=JSendSuccessResponse[dict]
+)
 async def get_summary(user: dict = Depends(get_user), db: AsyncSession = Depends(get_db)):
     """取得主頁儀表板 (Dashboard) 統計數據，僅包含學生資訊與各區塊學分進度，不包含課程明細"""
     if not user["role"] == "student":
@@ -39,23 +43,15 @@ async def get_summary(user: dict = Depends(get_user), db: AsyncSession = Depends
     student_info["student_id"] = student.student_id
     student_info["name"] = student.user_name
     
-    stmt = select(Department.department_name).where(Department.department_id == student.department_major1)
-    result = await db.execute(stmt)
-    student_info["major1"] = result.scalar()
+    student_info["major1"] = await get_department_name(student.department_major1, db)
     if student.department_major2:
-        stmt = select(Department.department_name).where(Department.department_id == student.department_major2)
-        result = await db.execute(stmt)
-        student_info["major2"] = result.scalar()
+        student_info["major2"] = await get_department_name(student.department_major2, db)
     
     if student.department_auxiliary1:
-        stmt = select(Department.department_name).where(Department.department_id == student.department_auxiliary1)
-        result = await db.execute(stmt)
-        student_info["auxiliary1"] = result.scalar()
+        student_info["auxiliary1"] = await get_department_name(student.department_auxiliary1, db)
     
     if student.department_auxiliary2:
-        stmt = select(Department.department_name).where(Department.department_id == student.department_auxiliary2)
-        result = await db.execute(stmt)
-        student_info["auxiliary2"] = result.scalar()
+        student_info["auxiliary2"] = await get_department_name(student.department_auxiliary2, db)
     
     total_credits = {"earned": 0, "required": 128}
 
@@ -432,7 +428,10 @@ async def rule_check(taken_set: set, rule: RequirementRule, db: AsyncSession):
     
     return total_earned, hint.replace("\\n", "\n")
 
-@router.get("/categories/{category_id}")
+@router.get(
+    "/categories/{category_id}", 
+    response_model=JSendSuccessResponse[dict]
+)
 async def get_categories(category_id: str, user: dict = Depends(get_user), db: AsyncSession = Depends(get_db)):
     """取得特定學分區塊的詳細進度與課程清單（用於點擊 Block 後跳轉的新頁面）"""
     if not user["role"] == "student":
