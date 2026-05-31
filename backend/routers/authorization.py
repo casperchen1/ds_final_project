@@ -165,10 +165,10 @@ async def get_user(token: str = Header(..., description="請傳入登入時拿�
 )
 async def reset_password(payload: ResetPasswordPayload, db: AsyncSession = Depends(get_db)):
     result = await db.execute(select(StudentAccount).where(StudentAccount.student_id == payload.id))
-    user = result.scalar_one_or_none()
+    user = result.scalar()
     if not user:
         result = await db.execute(select(TeacherAccount).where(TeacherAccount.teacher_id == payload.id))
-        user = result.scalar_one_or_none()
+        user = result.scalar()
     if user:
         if payload.password == payload.password_confirm:
             user.password = payload.password
@@ -180,7 +180,7 @@ async def reset_password(payload: ResetPasswordPayload, db: AsyncSession = Depen
             }
         else:
             raise APIFailException(
-                code="Bad request",
+                code="Password Mismatch",
                 message="密碼與確認密碼不同"
             )
     else:
