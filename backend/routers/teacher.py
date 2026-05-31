@@ -5,7 +5,6 @@ from database import get_db
 from pydantic import BaseModel, Field
 from typing import Optional
 from utils.exceptions import APIFailException
-from utils.department_info import get_department_name
 from .authorization import get_user
 from .graduation import check_department_rule
 
@@ -64,10 +63,32 @@ async def get_credit_progress(
 
     stmt = stmt.offset((payload.page - 1) * payload.size).limit(payload.size)
     result = await db.execute(stmt)
+    students = result.scalars().all()  
 
+    department_ids = set()  
+    for student in students:  
+        department_ids.add(student.department_major1)  
+        if student.department_major2:  
+            department_ids.add(student.department_major2)  
+        if student.department_auxiliary1:  
+            department_ids.add(student.department_auxiliary1)  
+        if student.department_auxiliary2:  
+            department_ids.add(student.department_auxiliary2)  
+
+    department_name_map: dict[str, str] = {}  
+    if department_ids:  
+        # 一次性將所有需要的系所名稱載入成對照表，避免 N+1 查詢  
+        department_result = await db.execute(  
+            select(Department.department_id, Department.department_name).where(Department.department_id.in_(department_ids))  
+        )  
+        department_name_map = {  
+            department[0]: department[1]  
+            for department in department_result
+        }
+        
     data_list = []
     try:
-        for student in result.scalars():
+        for student in students:
             student_info = {
                 "student_id": "",
                 "name": "",
@@ -76,23 +97,35 @@ async def get_credit_progress(
                 "auxiliary1": None,
                 "auxiliary2": None,
                 "is_pass": True
-            }
+            }    
+            
+            result = await db.execute(select(StudentAccount).where(StudentAccount.student_id == student.student_id))
+            student = result.scalar_one()
             
             student_info["student_id"] = student.student_id
             student_info["name"] = student.user_name
             
-            student_info["major1"] = await get_department_name(student.department_major1, db)
-            if student.department_major2:
-                student_info["major2"] = await get_department_name(student.department_major2, db)
-            
-            if student.department_auxiliary1:
-                student_info["auxiliary1"] = await get_department_name(student.department_auxiliary1, db)
-            
-            if student.department_auxiliary2:
-                student_info["auxiliary2"] = await get_department_name(student.department_auxiliary2, db)
+            student_info["major1"] = department_name_map.get(  
+                student.department_major1, ""  
+            )  
+
+            if student.department_major2:  
+                student_info["major2"] = department_name_map.get(  
+                    student.department_major2  
+                )  
+
+            if student.department_auxiliary1:  
+                student_info["auxiliary1"] = department_name_map.get(  
+                    student.department_auxiliary1  
+                )  
+
+            if student.department_auxiliary2:  
+                student_info["auxiliary2"] = department_name_map.get(  
+                    student.department_auxiliary2  
+                )
             
             total_credits = {"earned": 0, "required": 128}
-            
+
             categories = [
                 {
                     "id": "major1",
@@ -148,7 +181,7 @@ async def get_credit_progress(
             )
             stmt = select(func.sum(CourseInformation.credits)).where(CourseInformation.course_id.in_(subquery))
             result = await db.execute(stmt)
-            categories[1]["earned"] = result.scalar() or 0
+            categories[1]["earned"] = int(result.scalar() or 0) 
             total_credits["earned"] += categories[1]["earned"]
             # print("選修檢查正常")
             # 中文
@@ -251,8 +284,8 @@ async def get_credit_progress(
                     student_info["is_pass"] = False
                     categories[2]["hint"] += f"尚缺資訊通{2 - general["GI"]}學分、"
             
-            categories[2]["earned"] = min(GC_earned + GF_earned + general["GH"] + general["GS"] + general["GN"] + general["GI"], 28)
-            
+            categories[2]["earned"] = int(min(GC_earned + GF_earned + general["GH"] + general["GS"] + general["GN"] + general["GI"], 28))
+            print(type(categories[2]["earned"]))
             core = 0
             tmp_hint = ""
             if not general["CGH"]:
@@ -356,7 +389,6 @@ async def get_credit_progress(
                 }
             )
             
-        print(data_list)
         return {
             "status": "success",
             "meta": {

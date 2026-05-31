@@ -8,7 +8,6 @@ from models.Course import CourseInformation, CourseRecord
 from models.Department import Department, GraduationRequirements, RequirementRule, RequirementCourseMapping
 from utils.jsend_schemas import JSendSuccessResponse, JSendErrorResponse
 from utils.exceptions import APIFailException
-from utils.department_info import get_department_name
 from .authorization import get_user
 
 router = APIRouter(
@@ -20,7 +19,7 @@ router = APIRouter(
 )
 async def get_summary(user: dict = Depends(get_user), db: AsyncSession = Depends(get_db)):
     """取得主頁儀表板 (Dashboard) 統計數據，僅包含學生資訊與各區塊學分進度，不包含課程明細"""
-    if not user["role"] == "student":
+    if user["role"] != "student":
         raise APIFailException(
             code="Bad request",
             message="使用者身份不是學生"
@@ -36,27 +35,51 @@ async def get_summary(user: dict = Depends(get_user), db: AsyncSession = Depends
         "is_pass": True
     }    
     
-    stmt = select(StudentAccount).where(StudentAccount.student_id == user["id"])
-    result = await db.execute(stmt)
+    result = await db.execute(select(StudentAccount).where(StudentAccount.student_id == user["id"]))
     student = result.scalar_one()
     
     student_info["student_id"] = student.student_id
     student_info["name"] = student.user_name
     
-    student_info["major1"] = await get_department_name(student.department_major1, db)
-    if student.department_major2:
-        student_info["major2"] = await get_department_name(student.department_major2, db)
-    
-    if student.department_auxiliary1:
-        student_info["auxiliary1"] = await get_department_name(student.department_auxiliary1, db)
-    
-    if student.department_auxiliary2:
-        student_info["auxiliary2"] = await get_department_name(student.department_auxiliary2, db)
-    
-    total_credits = {"earned": 0, "required": 128}
+    department_ids = set()  
+    department_ids.add(student.department_major1)  
+    if student.department_major2:  
+        department_ids.add(student.department_major2)  
+    if student.department_auxiliary1:  
+        department_ids.add(student.department_auxiliary1)  
+    if student.department_auxiliary2:  
+        department_ids.add(student.department_auxiliary2)  
+    department_name_map: dict[str, str] = {}  
+    if department_ids:  
+        # 一次性將所有需要的系所名稱載入成對照表，避免 N+1 查詢  
+        department_result = await db.execute(  
+            select(Department.department_id, Department.department_name).where(Department.department_id.in_(department_ids))  
+        )  
+        department_name_map = {  
+            department[0]: department[1]  
+            for department in department_result
+        }
+        
+    student_info["major1"] = department_name_map.get(  
+        student.department_major1
+    )  
 
-    stmt = select(GraduationRequirements.required_course_credits).where(GraduationRequirements.department_id == student.department_major1)
-    result = await db.execute(stmt)
+    if student.department_major2:  
+        student_info["major2"] = department_name_map.get(  
+            student.department_major2  
+        )  
+
+    if student.department_auxiliary1:  
+        student_info["auxiliary1"] = department_name_map.get(  
+            student.department_auxiliary1  
+        )  
+
+    if student.department_auxiliary2:  
+        student_info["auxiliary2"] = department_name_map.get(  
+            student.department_auxiliary2  
+        )
+        
+    total_credits = {"earned": 0, "required": 128}
 
     categories = [
         {
@@ -113,7 +136,7 @@ async def get_summary(user: dict = Depends(get_user), db: AsyncSession = Depends
     )
     stmt = select(func.sum(CourseInformation.credits)).where(CourseInformation.course_id.in_(subquery))
     result = await db.execute(stmt)
-    categories[1]["earned"] = result.scalar() or 0
+    categories[1]["earned"] = int(result.scalar() or 0) 
     total_credits["earned"] += categories[1]["earned"]
     # print("選修檢查正常")
     # 中文
@@ -216,8 +239,8 @@ async def get_summary(user: dict = Depends(get_user), db: AsyncSession = Depends
             student_info["is_pass"] = False
             categories[2]["hint"] += f"尚缺資訊通{2 - general["GI"]}學分、"
     
-    categories[2]["earned"] = min(GC_earned + GF_earned + general["GH"] + general["GS"] + general["GN"] + general["GI"], 28)
-    
+    categories[2]["earned"] = int(min(GC_earned + GF_earned + general["GH"] + general["GS"] + general["GN"] + general["GI"], 28))
+    print(type(categories[2]["earned"]))
     core = 0
     tmp_hint = ""
     if not general["CGH"]:
@@ -312,7 +335,7 @@ async def get_summary(user: dict = Depends(get_user), db: AsyncSession = Depends
     
     if total_credits["earned"] < total_credits["required"]:
         student_info["is_pass"] = False
-    
+        
     return {
         "data": {
             "student_info": student_info,
@@ -320,14 +343,14 @@ async def get_summary(user: dict = Depends(get_user), db: AsyncSession = Depends
             "categories": categories
         }
     }
-
+    
 async def check_department_rule(student_id, department_id, db: AsyncSession):
     earned = 0
     required = 0
     hint = ""
 
     result = await db.execute(select(GraduationRequirements.required_course_credits).where(GraduationRequirements.department_id == department_id))
-    required = result.scalar()
+    required = result.scalar() or 0
     
     stmt = (select(CourseRecord.course_id)
             .where(CourseRecord.student_id == student_id, 
