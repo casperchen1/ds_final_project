@@ -5,7 +5,7 @@ from database import get_db
 from pydantic import BaseModel, Field
 from typing import Optional
 from utils.exceptions import APIFailException
-from .authorization import get_user
+from utils.jsend_schemas import JSendSuccessResponse
 
 # 引入 Models
 from models import (
@@ -40,6 +40,12 @@ async def get_credit_progress(
             code="UNAUTHORIZED",
             message="使用者身份不是教師"
         )
+
+    # 2. 建立基礎查詢條件 (Base Query)
+    conditions = []
+    
+    if department_id:
+        conditions.append(StudentAccount.department_major1 == department_id)
         
     try:
         # ==========================================
