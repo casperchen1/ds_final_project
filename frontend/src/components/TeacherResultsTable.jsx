@@ -85,9 +85,9 @@ const TeacherResultsTable = ({ data, onBack, handleClick }) => {
                   {/* Pass Status */}
                   <td style={{ ...tdStyle, fontWeight: "bold" }}>
                     {student_info.is_pass ? (
-                      <span style={{ color: "#10B981" }}>✅ 通過</span>
+                      <span style={{ color: "#10B981" }}>通過</span>
                     ) : (
-                      <span style={{ color: "#EF4444" }}>❌ 未通過</span>
+                      <span style={{ color: "#EF4444" }}>未通過</span>
                     )}
                   </td>
                 </tr>

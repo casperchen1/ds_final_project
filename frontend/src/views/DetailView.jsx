@@ -154,7 +154,7 @@ const DetailView = ({ category, onBack, token }) => {
 
   if (!cat) return null;
 
-  const pct = (cat.earned / cat.required) * 100;
+  const pct = Math.min(cat.earned / cat.required, 1) * 100;
 
   const headerStyle = {
     background: `radial-gradient(circle at 18% 60%, ${cat.fromColor} 0%, ${cat.toColor} 100%)`,

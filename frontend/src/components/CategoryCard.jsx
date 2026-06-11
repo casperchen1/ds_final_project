@@ -30,7 +30,7 @@ const CategoryCard = ({
   onSelect,
   loading,
 }) => {
-  const pct = (cat.earned / cat.required) * 100;
+  const pct = Math.min(cat.earned / cat.required, 1) * 100;
   const radius = size * 0.42;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset =
